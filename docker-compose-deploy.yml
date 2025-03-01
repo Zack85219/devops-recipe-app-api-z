@@ -6,7 +6,8 @@ services:
       context: .
     restart: always
     volumes:
-      - static-data:/vol/web
+      - static-data:/vol/web/static
+      - media-data:/vol/web/media
     environment:
       - DB_HOST=db
       - DB_NAME=${DB_NAME}
@@ -16,6 +17,10 @@ services:
       - ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
     depends_on:
       - db
+    command: >
+      sh -c "run.sh"
+    ports:
+      - "9000:9000"
 
   db:
     image: postgres:13-alpine
@@ -37,7 +42,9 @@ services:
       - 80:8000
     volumes:
       - static-data:/vol/static
+      - media-data:/vol/media
 
 volumes:
   postgres-data:
   static-data:
+  media-data:
